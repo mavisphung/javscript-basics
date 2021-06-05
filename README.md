@@ -2,6 +2,13 @@
 Để debug bằng vsc, cần cấu hình file launch.json trong thư mục .vscode
 Sửa lại giá trị của thuộc tính _url_ thành đường dẫn tới file html
 
+### Attribute defer
+Khi load 1 trang html có chứa external css và javascript, theo logic của browser sẽ load xong và thực thi. Điều này có khả năng gây ra lỗi khi trong file javascript có preload (trường hợp để tag script trên thẻ head) của một element nào đấy trong file html mà lúc đang tải mà chưa tải hết DOM (Data object models) trong file html.
+
+Dùng attribute `defer` của thẻ script để giải quyết vấn đề này.
+
+Từ khóa `defer` để đánh dấu cho browser hiểu rằng, tải xong và chờ đến khi tải hết trang html thì mới thực thi code trong file javascript
+
 ### Toán tử == và ===
 ##### Toán tử ==
 So sánh giá trị của 2 biến
