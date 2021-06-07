@@ -1030,3 +1030,65 @@ setTimeout(() => {
 }, 2000); //sau 2s sẽ xóa event click
 ```
 **Lưu ý:** Không nên dùng hàm anonymous hay `function.bind(this)`. Vì mỗi khi element bị triggered sẽ tạo ra 1 function object hoàn toàn mới, nhìn code có vẻ giống nhau nhưng bản chất ở tầng logic thì lại là 2 địa chỉ khác nhau. Nếu muốn sử dụng hàm anonymous hay `function.bind()` thì phải khởi tạo 1 biến hằng để lưu địa chỉ.
+
+**Ngoài ra** nếu tham số là `event` được truyền vào trong function thì sẽ xem được metadata của event được triggered.
+```javascript
+const buttonClickHandler = event => {
+    console.log(event);
+};
+
+button.addEventListener('click', buttonClickHandler);
+
+//Khi button được click sẽ hiện ra console metadata của event
+```
+
+Ví dụ:
+```javascript
+
+//Thêm hàm bắt sự kiện cho button
+const buttonClickHandler = event => {
+    event.target.disabled = true;
+    console.log(event);
+};
+
+//Tìm tất cả button có trong DOM
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach(btn => {
+    btn.addEventListener('click', buttonClickHandler);
+});
+```
+Giải thích: Trong object `event` có nhiều thuộc tính vv, và đặc biệt là thuộc tính `target` (đây chính là element được triggerd). Mà đã là element thì chắc chắn sẽ truy cập được những thuộc tính của element, ví dụ trên chính là truy xuất đến thuộc tính `disabled` của element `button`. Khi set thuộc tính `disabled = true` thì element được triggered sẽ tự động thêm attribute disabled
+
+Tương tự như thế, javascript hỗ trợ sẵn phần lớn event tương tác với DOM. Tuỳ theo mình khai báo như thế nào như bên dưới
+```javascript
+//bắt sự kiện click
+element.addEventListener('click', ...);
+
+//bắt sự kiện di chuột vào element
+element.addEventListener('mouseenter', ...);
+
+//bắt sự kiện scroll của window
+window.addEventListener('scroll', ...);
+```
+
+Thông tin chi tiết thì search google theo từ khoá: **Javascript Event MDN** (official)
+
+
+**Ý tưởng về infinity scroll**
+```javascript
+let curElementNumber = 0;
+
+function scrollHandler() {
+  const distanceToBottom = document.body.getBoundingClientRect().bottom;
+
+  if (distanceToBottom < document.documentElement.clientHeight + 150) {
+    const newDataElement = document.createElement('div');
+    curElementNumber++;
+    newDataElement.innerHTML = `<p>Element ${curElementNumber}</p>`;
+    document.body.append(newDataElement);
+  }
+}
+
+window.addEventListener('scroll', scrollHandler);
+```
